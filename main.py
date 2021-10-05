@@ -1,4 +1,4 @@
-#import arcade
+import arcade
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -14,21 +14,23 @@ class Game(arcade.Window):
         self.creature_list = None
 
     def setup(self):
+        self.scene = arcade.Scene()
         self.creature_list = arcade.SpriteList()
 
+        self.creature_sprite = arcade.Sprite(":resources:images/animated_characters/zombie/zombie_idle.png")
+        self.creature_sprite.center_x = 700
+        self.creature_sprite.center_y = 200
+        self.creature_list.append(self.creature_sprite)
+
     def on_draw(self):
-        # This command should happen before we start drawing. It will clear
-        # the screen to the background color, and erase what we drew last frame.
         arcade.start_render()
-        # Call draw() on all your sprite lists below
+        self.creature_list.draw()
 
     def on_update(self, delta_time):
-        """
-        All the logic to move, and the game logic goes here.
-        Normally, you'll call update() on the sprite lists that
-        need it.
-        """
-        pass
+        self.creature_list.update()
+        for creature in self.creature_list:
+            creature.change_x -= .1
+
 
 
 def main():

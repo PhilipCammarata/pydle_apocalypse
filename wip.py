@@ -3,7 +3,7 @@ from creature import Creature
 
 gremlin = Creature('gremlin')
 orc_mage = Creature('orc_mage')
-orc_mage2 = copy.copy(orc_mage)
+orc_mage2 = copy.deepcopy(orc_mage)
 
 print(gremlin.name)
 print(gremlin.spawn_time)
