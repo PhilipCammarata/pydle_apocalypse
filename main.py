@@ -20,17 +20,21 @@ class Game(arcade.Window):
         self.hero_list = None
         self.creature_list = None
 
+        self.attack_timer = 0
+
     def setup(self):
         self.hero_list = arcade.SpriteList()
         self.creature_list = arcade.SpriteList()
 
+        # position the heroes
         self.hero_list.append(Hero("healer", 50, 200))
         self.hero_list.append(Hero("dps", 125, 200))
         self.hero_list.append(Hero("tank", 200, 200))
 
-        self.creature_sprite = Creature("gremlin")
+        self.creature_sprite = Creature("gremlin", 700, 183)
         self.creature_list.append(self.creature_sprite)
 
+        # spawn a creature every 2 seconds
         arcade.schedule(self.add_creature, 2)
 
     def on_draw(self):
@@ -43,18 +47,27 @@ class Game(arcade.Window):
 
     def on_update(self, delta_time):
         self.creature_list.update()
-        for creature in self.creature_list:
+        self.attack_timer += delta_time
+
+        for index, creature in enumerate(self.creature_list):
             creature.change_x = -CREATURE_SPEED
             if arcade.check_for_collision_with_lists(
                 creature, [self.hero_list, self.creature_list]
             ):
                 creature.change_x = 0
+            if (
+                arcade.check_for_collision_with_list(creature, self.hero_list)
+                and self.attack_timer > 1
+            ):
+                self.attack_timer = 0
+                creature.health -= 1
+                if creature.health <= 0:
+                    creature.remove_from_sprite_lists()
 
     def add_creature(self, delta_time):
-        if len(self.creature_list) >= 7:
-            return
-        creature_sprite = Creature("gremlin")
-        self.creature_list.append(creature_sprite)
+        if len(self.creature_list) < 7:
+            creature_sprite = Creature("gremlin", 700, 183)
+            self.creature_list.append(creature_sprite)
 
 
 def main():

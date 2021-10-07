@@ -16,3 +16,6 @@ class Hero(arcade.Sprite):
             return ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png"
         if id == "healer":
             return ":resources:images/animated_characters/robot/robot_idle.png"
+
+    def attack_creature(self, creature):
+        pass
