@@ -49,31 +49,24 @@ class Game(arcade.Window):
         self.creature_list.update()
         self.attack_timer += delta_time
 
-        for index, creature in enumerate(self.creature_list):
+        for creature in self.creature_list:
             creature.change_x = -CREATURE_SPEED
 
+            # if a creature collides with a hero, stop
             if arcade.check_for_collision_with_list(creature, self.hero_list):
                 creature.change_x = 0
 
+            # if a creature collides with a creature before it, stop
             creature_index = self.creature_list.index(creature)
-            if creature_index >= 1:
-                if arcade.check_for_collision(creature, self.creature_list[creature_index - 1]):
-                    creature.change_x = 0
-
-            if arcade.check_for_collision_with_list(creature, self.hero_list) and self.attack_timer > 1:
-                self.attack_timer = 0
-                creature.health -= 1
-                if creature.health <= 0:
-                    creature.remove_from_sprite_lists()
-            """
-            if arcade.check_for_collision_with_lists(creature, [self.hero_list, self.creature_list]):
+            if creature_index >= 1 and arcade.check_for_collision(creature, self.creature_list[creature_index - 1]):
                 creature.change_x = 0
+
+            # if a creature collides with a hero and the hero hasn't attacked in the last second, attack the creature
             if arcade.check_for_collision_with_list(creature, self.hero_list) and self.attack_timer > 1:
                 self.attack_timer = 0
                 creature.health -= 1
                 if creature.health <= 0:
                     creature.remove_from_sprite_lists()
-            """
 
     def add_creature(self, delta_time):
         if len(self.creature_list) < 7:
